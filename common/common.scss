@@ -36,7 +36,7 @@ textarea,
 }
 
 /* Force headings, buttons and tags to uppercase for that retro OS feel */
-@if $uppercase_text {
+@if $uppercase_text == "true" {
   h1,
   h2,
   h3,
@@ -102,7 +102,7 @@ textarea,
 /* 5. GAME BOY CAMERA EFFECT (Images & Avatars) */
 
 /* Forces all colorful avatars and uploaded images into a green, high-contrast monochrome */
-@if $camera_filter {
+@if $camera_filter == "true" {
   img,
   .avatar,
   .logo-big,
@@ -334,7 +334,7 @@ h6,
   /* 15. GAME BOY BOOT-UP LOGO */
 
   /* Drops the logo down on page load and flashes (mimicking the classic boot screen) */
-  @if $boot_animation {
+  @if $boot_animation == "true" {
     .d-header .logo-big,
     .d-header .logo-small,
     .d-header .title {
@@ -354,7 +354,7 @@ h6,
   /* 17. BLINKING TERMINAL CURSOR */
 
   /* Adds a flashing square cursor to the "Reply" and "New Topic" buttons */
-  @if $blinking_cursor {
+  @if $blinking_cursor == "true" {
     #create-topic span.d-button-label::after,
     .create .d-button-label::after,
     .reply .d-button-label::after {

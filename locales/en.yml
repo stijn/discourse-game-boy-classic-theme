@@ -2,6 +2,7 @@ en:
   theme_metadata:
     description: "A four-shade, 8-bit theme inspired by the original 1989 handheld: pixel font, square corners, chunky borders and a Konami-code easter egg."
     settings:
+      uppercase_text: "Show headings, topic titles, buttons and tags in capitals, like a handheld menu screen."
       camera_filter: "Tint avatars, logos and post images green, like a 1998 pocket camera print."
       boot_animation: "Drop the site logo in on page load, with a short flash, like a cartridge boot screen."
       blinking_cursor: "Show a blinking block cursor on the New Topic and Reply buttons."

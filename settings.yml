@@ -1,3 +1,5 @@
+uppercase_text:
+  default: true
 camera_filter:
   default: true
 boot_animation:

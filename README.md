@@ -36,6 +36,7 @@ Updates: open the theme and click **Check for updates**, or enable automatic upd
 
 | Setting | Default | What it does |
 | --- | --- | --- |
+| `uppercase_text` | on | Headings, topic titles, buttons and tags in capitals |
 | `camera_filter` | on | Tints avatars, logos and post images green |
 | `boot_animation` | on | Drops the site logo in on page load |
 | `blinking_cursor` | on | Blinking block cursor on the New Topic and Reply buttons |

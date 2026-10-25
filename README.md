@@ -55,6 +55,7 @@ javascripts/discourse/
   api-initializers/
     konami-confetti.js      Easter egg
 assets/                     Bundled font and confetti script
+screenshots/                Theme previews (1600×900) and the script that draws them
 licenses/                   Third-party licences
 spec/system/                Discourse core-feature smoke tests (run in CI)
 ```

@@ -1,0 +1,31 @@
+{
+  "name": "Game Boy Classic",
+  "component": false,
+  "authors": "Stijn Vogels",
+  "about_url": "https://github.com/stijn/discourse-game-boy-classic-theme",
+  "license_url": "https://github.com/stijn/discourse-game-boy-classic-theme/blob/main/LICENSE",
+  "theme_version": "1.0.0",
+  "minimum_discourse_version": null,
+  "maximum_discourse_version": null,
+  "assets": {
+    "press_start_2p": "assets/PressStart2P-Regular.ttf",
+    "confetti_js": "assets/canvas-confetti-1.9.3.js"
+  },
+  "color_schemes": {
+    "DMG-01": {
+      "primary": "0f380f",
+      "secondary": "9bbc0f",
+      "tertiary": "306230",
+      "quaternary": "8bac0f",
+      "header_background": "306230",
+      "header_primary": "9bbc0f",
+      "highlight": "8bac0f",
+      "selected": "8bac0f",
+      "hover": "306230",
+      "danger": "0f380f",
+      "success": "306230",
+      "love": "0f380f"
+    }
+  },
+  "modifiers": {}
+}

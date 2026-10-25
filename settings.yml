@@ -1,0 +1,8 @@
+camera_filter:
+  default: true
+boot_animation:
+  default: true
+blinking_cursor:
+  default: true
+konami_confetti:
+  default: true

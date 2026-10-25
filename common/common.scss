@@ -1,0 +1,422 @@
+/* =========================================
+   GAME BOY CLASSIC DISCOURSE THEME
+   ========================================= */
+
+/* Bundled with the theme (SIL OFL 1.1), so no request goes to Google Fonts. */
+@font-face {
+  font-family: "Press Start 2P";
+  src: url($press_start_2p) format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* The four shades follow the active colour palette (DMG-01 by default),
+   so admins can recolour the theme from Admin > Appearance > Colors. */
+
+:root {
+  --gb-lightest: var(--secondary);
+  --gb-light: var(--quaternary);
+  --gb-dark: var(--tertiary);
+  --gb-darkest: var(--primary);
+  --gb-font: "Press Start 2P", monospace;
+}
+
+/* 1. TYPOGRAPHY & GLOBAL STYLES */
+body,
+input,
+button,
+select,
+textarea,
+.btn,
+.nav-pills > li > a {
+  font-family: var(--gb-font) !important;
+  font-size: 11px; /* Pixel fonts are large; keep this small */
+  line-height: 1.8;
+}
+
+/* Force headings to uppercase for that retro OS feel */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.title {
+  text-transform: uppercase;
+}
+
+/* 2. DESTROY ROUNDED CORNERS (Square Pixels Only!) */
+* {
+  border-radius: 0 !important;
+}
+
+/* 3. LAYOUT & BORDERS */
+.d-header {
+  border-bottom: 4px solid var(--gb-darkest);
+  box-shadow: none !important;
+}
+
+#main-outlet {
+  padding-top: 20px;
+}
+
+/* Boxy topic lists */
+.topic-list th,
+.topic-list td {
+  border: 2px solid var(--gb-darkest);
+  background-color: var(--gb-light);
+  padding: 10px;
+}
+
+.topic-post {
+  border: 4px solid var(--gb-darkest);
+  margin-bottom: 15px;
+  background-color: var(--gb-light);
+}
+
+/* 4. RETRO BUTTON PHYSICS */
+.btn {
+  background-color: var(--gb-lightest) !important;
+  color: var(--gb-darkest) !important;
+  border: 2px solid var(--gb-darkest) !important;
+  box-shadow: 4px 4px 0 var(--gb-darkest) !important;
+  transition: none !important;
+  text-transform: uppercase;
+}
+
+/* When clicking/hovering, press the button down */
+.btn:hover,
+.btn:active {
+  transform: translate(4px, 4px) !important;
+  box-shadow: 0 0 0 var(--gb-darkest) !important;
+  background-color: var(--gb-dark) !important;
+  color: var(--gb-lightest) !important;
+}
+
+/* 5. GAME BOY CAMERA EFFECT (Images & Avatars) */
+
+/* Forces all colorful avatars and uploaded images into a green, high-contrast monochrome */
+@if $camera_filter {
+  img,
+  .avatar,
+  .logo-big,
+  .logo-small {
+    filter: grayscale(100%)
+      sepia(100%)
+      hue-rotate(50deg)
+      saturate(300%)
+      contrast(1.5)
+      brightness(0.9);
+    border: 2px solid var(--gb-darkest);
+    background-color: var(--gb-lightest);
+  }
+}
+
+/* 6. INPUT FIELDS & COMPOSER */
+input[type="text"],
+input[type="password"],
+input[type="email"],
+textarea,
+.d-editor-textarea-wrapper {
+  background-color: var(--gb-light) !important;
+  border: 4px solid var(--gb-darkest) !important;
+  color: var(--gb-darkest) !important;
+}
+
+input:focus,
+textarea:focus {
+  outline: none;
+  background-color: var(--gb-lightest) !important;
+}
+
+/* 7. BLOCKY SCROLLBARS (Webkit Browsers) */
+::-webkit-scrollbar {
+  width: 14px;
+  background: var(--gb-lightest);
+  border-left: 2px solid var(--gb-darkest);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--gb-dark);
+  border: 2px solid var(--gb-darkest);
+}
+
+/* 8. CODE & PREFORMATTED TEXT */
+
+/* Inline code snippets */
+p > code,
+li > code {
+  background-color: var(--gb-darkest);
+  color: var(--gb-lightest);
+  border: 1px solid var(--gb-dark);
+  padding: 2px 6px;
+  font-size: 10px;
+}
+
+/* Code blocks */
+pre code {
+  background-color: var(--gb-darkest) !important;
+  color: var(--gb-lightest) !important;
+  border: 4px solid var(--gb-dark) !important;
+  display: block;
+  padding: 12px;
+  overflow-x: auto;
+}
+
+/* Adjusting the copy button that appears on code blocks */
+.copy-cmd {
+  background-color: var(--gb-light) !important;
+  border: 2px solid var(--gb-darkest) !important;
+  color: var(--gb-darkest) !important;
+}
+
+.copy-cmd:hover {
+  background-color: var(--gb-darkest) !important;
+  color: var(--gb-lightest) !important;
+}
+
+/* 9. @MENTIONS */
+a.mention,
+a.mention-group {
+  background-color: var(--gb-darkest) !important;
+  color: var(--gb-lightest) !important;
+  border: 2px solid var(--gb-darkest) !important;
+  padding: 2px 6px;
+  font-weight: normal;
+  text-decoration: none !important;
+  transition: none !important;
+}
+
+/* Blocky hover effect for mentions */
+a.mention:hover,
+a.mention-group:hover {
+  background-color: var(--gb-lightest) !important;
+  color: var(--gb-darkest) !important;
+  border: 2px solid var(--gb-darkest) !important;
+  box-shadow: 2px 2px 0 var(--gb-darkest);
+  transform: translate(-2px, -2px);
+}
+
+/* 10. GLOBAL NOTICES & ALERTS */
+
+/* Gives the admin/system banners a chunky, dialogue-box look */
+.global-notice,
+.alert.alert-info,
+.alert.alert-error,
+.alert.alert-success,
+.fps-notice {
+  background-color: var(--gb-light) !important;
+  color: var(--gb-darkest) !important;
+  border: 4px solid var(--gb-darkest) !important;
+  box-shadow: 4px 4px 0 var(--gb-darkest);
+  margin-bottom: 20px;
+  padding: 15px;
+}
+
+/* 11. TOPIC TAGS (Box Style) */
+
+/* Forces tags into hard squares with retro drop-shadows */
+.discourse-tag.box {
+  background-color: var(--gb-lightest) !important;
+  color: var(--gb-darkest) !important;
+  border: 2px solid var(--gb-darkest) !important;
+  box-shadow: 2px 2px 0 var(--gb-darkest);
+  text-transform: uppercase;
+  font-size: 9px;
+  padding: 2px 6px;
+  margin-right: 6px;
+  transition: none !important;
+}
+
+/* Interactive click physics for tags */
+.discourse-tag.box:hover {
+  background-color: var(--gb-darkest) !important;
+  color: var(--gb-lightest) !important;
+  box-shadow: 0 0 0 var(--gb-darkest);
+  transform: translate(2px, 2px);
+  text-decoration: none !important;
+}
+
+/* 12. HORIZONTAL RULE (HR) WITHIN POSTS */
+
+/* Replaces the standard thin line with a chunky, 8-bit dashed divider */
+.cooked hr {
+  background: transparent !important;
+  border-top: 4px dashed var(--gb-darkest) !important;
+  height: 0;
+  margin: 25px 0;
+}
+
+/* 13. H1 - H6 HEADERS (In-Post Content) */
+
+/* Scoped to ".cooked" so it only applies to user-generated markdown posts */
+.cooked h1,
+.cooked h2,
+.cooked h3,
+.cooked h4,
+.cooked h5,
+.cooked h6 {
+  color: var(--gb-darkest);
+  font-weight: normal; /* Pixel fonts render too thickly when bolded */
+  margin-top: 25px;
+  margin-bottom: 15px;
+  line-height: 1.4;
+}
+
+/* H1: Main Title - gets a thick solid underline */
+.cooked h1 {
+  font-size: 18px;
+  border-bottom: 4px solid var(--gb-darkest);
+  padding-bottom: 8px;
+}
+
+/* H2: Subtitle - gets a dashed underline */
+.cooked h2 {
+  font-size: 16px;
+  border-bottom: 2px dashed var(--gb-dark);
+  padding-bottom: 6px;
+}
+
+/* H3 - H6: Shrinking font sizes */
+.cooked h3 {
+  font-size: 14px;
+}
+
+.cooked h4 {
+  font-size: 12px;
+}
+
+/* H5 gets an inverted highlight for emphasis */
+.cooked h5 {
+  font-size: 11px;
+  background-color: var(--gb-darkest);
+  color: var(--gb-lightest);
+  display: inline-block;
+  padding: 4px 8px;
+}
+
+/* H6 gets a lighter shade */
+.cooked h6 {
+  font-size: 10px;
+  color: var(--gb-dark);
+}
+
+/* 14. FORCE 8-BIT FONT ON ALL HEADERS */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.cooked h1,
+.cooked h2,
+.cooked h3,
+.cooked h4,
+.cooked h5,
+.cooked h6,
+.title,
+.topic-title,
+.fancy-title {
+  font-family: var(--gb-font) !important;
+  text-transform: uppercase;
+}
+
+/* =========================================
+   DELIGHTFUL 8-BIT ANIMATIONS
+   Only for visitors who haven't asked their OS for reduced motion.
+   ========================================= */
+
+@media (prefers-reduced-motion: no-preference) {
+  /* 15. GAME BOY BOOT-UP LOGO */
+
+  /* Drops the logo down on page load and flashes (mimicking the classic boot screen) */
+  @if $boot_animation {
+    .d-header .logo-big,
+    .d-header .logo-small,
+    .d-header .title {
+      animation: gb-boot-drop 2.5s ease-out forwards;
+    }
+  }
+
+  /* 16. THE "1UP" LIKE BUTTON JUMP */
+
+  /* When a user likes a post, the heart does a low-framerate 8-bit bounce.
+     steps() simulates a chunky, low frame rate. */
+
+  .has-like .d-icon-heart {
+    animation: gb-pixel-jump 0.4s steps(4) forwards;
+  }
+
+  /* 17. BLINKING TERMINAL CURSOR */
+
+  /* Adds a flashing square cursor to the "Reply" and "New Topic" buttons */
+  @if $blinking_cursor {
+    #create-topic span.d-button-label::after,
+    .create .d-button-label::after,
+    .reply .d-button-label::after {
+      content: "\2588"; /* Unicode full block */
+      margin-left: 8px;
+      animation: gb-retro-blink 1s infinite;
+    }
+  }
+}
+
+.has-like .d-icon-heart {
+  color: var(--gb-darkest) !important;
+}
+
+@keyframes gb-boot-drop {
+  0% {
+    transform: translateY(-100px);
+    opacity: 0;
+  }
+
+  60% {
+    transform: translateY(0);
+    opacity: 1;
+    filter: none;
+  }
+
+  80% {
+    filter: contrast(200%) brightness(150%);
+  }
+
+  100% {
+    filter: none;
+  }
+}
+
+@keyframes gb-pixel-jump {
+  0% {
+    transform: translateY(0);
+  }
+
+  30% {
+    transform: translateY(-6px) scale(1.2);
+  }
+
+  50% {
+    transform: translateY(-10px) scale(1.2);
+  }
+
+  70% {
+    transform: translateY(-6px) scale(1.2);
+  }
+
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes gb-retro-blink {
+  0%,
+  49% {
+    opacity: 1;
+  }
+
+  50%,
+  100% {
+    opacity: 0;
+  }
+}

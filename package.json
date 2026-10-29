@@ -10,6 +10,7 @@
     "lint-to-the-future": "^3.2.0",
     "lint-to-the-future-eslint": "^4.0.0",
     "prettier": "3.8.1",
+    "sass": "1.93.2",
     "stylelint": "17.5.0",
     "typescript": "7.1.0-dev.20260930.4"
   },
@@ -24,7 +25,9 @@
     "lint:prettier:fix": "pnpm prettier '{javascripts,desktop,mobile,common,scss,stylesheets}/**/*.scss' '{javascripts,test}/**/*.{js,gjs,ts,gts,mts,cts}' -w --no-error-on-unmatched-pattern",
     "lint:types": "tsc -b --runExternalCode",
     "lttf:ignore": "lint-to-the-future ignore",
-    "update-skeleton": "pnpx @discourse/update-skeleton@latest"
+    "update-skeleton": "pnpx @discourse/update-skeleton@latest",
+    "lint:contrast": "node scripts/check-contrast.mjs",
+    "icons": "node scripts/gen-pixel-icons.mjs && pnpm lint:prettier:fix"
   },
   "engines": {
     "node": ">= 22",

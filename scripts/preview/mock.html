@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Game Boy Classic preview</title>
+<style>
+/* A few Discourse core defaults the theme is written against. */
+html { font-size: 15px; }
+body { margin: 0; background: var(--secondary); color: var(--primary); font-family: sans-serif; }
+a { color: var(--tertiary); text-decoration: none; }
+.d-icon { width: 1em; height: 1em; fill: currentcolor; vertical-align: -0.125em; display: inline-block; background: currentcolor; }
+.d-header { background: var(--header_background); height: 64px; position: sticky; top: 0; }
+.d-header .contents { display: flex; align-items: center; justify-content: space-between; height: 100%; padding: 0 24px; }
+.d-header .title { font-size: 14px; margin: 0; }
+.d-header-icons { display: flex; gap: 8px; list-style: none; margin: 0; padding: 0; font-size: 20px; align-items: center; }
+.wrap { display: flex; }
+.sidebar-wrapper { width: 230px; padding: 16px; flex: none; }
+.sidebar-section-link { display: block; padding: 8px; font-size: 10px; }
+.sidebar-section-header { font-size: 10px; padding: 8px; }
+#main-outlet { flex: 1; padding: 0 24px 24px; }
+.nav-pills { display: flex; gap: 8px; list-style: none; padding: 0; margin: 0 0 16px; }
+.nav-pills > li > a { padding: 8px 12px; display: block; }
+.nav-pills > li > a.active { background: var(--primary); color: var(--secondary); }
+.topic-list { border-collapse: collapse; width: 100%; }
+.topic-list th { text-align: left; font-size: 10px; }
+.topic-list td { vertical-align: middle; }
+.topic-list .main-link a.title { font-size: 20px; display: block; }
+.badge-notification { padding: 2px 6px; font-size: 10px; margin-left: 6px; }
+.badge-category__wrapper { display: inline-block; --category-badge-size: 0.75em; }
+.badge-category::before { content: ""; display: inline-block; background: var(--category-badge-color); width: var(--category-badge-size); height: var(--category-badge-size); margin-right: 6px; vertical-align: middle; }
+.badge-category__name { font-size: 18px; }
+.discourse-tag.box { display: inline-block; }
+.btn { padding: 8px 12px; display: inline-flex; gap: 8px; align-items: center; border: 1px solid; cursor: pointer; }
+.topic-body { padding: 12px 16px; }
+.topic-body .names { font-size: 10px; margin-bottom: 8px; }
+.cooked { max-width: 760px; }
+.cooked table { border-collapse: collapse; }
+.cooked table th, .cooked table td { padding: 4px 10px; }
+aside.quote { padding: 8px 12px; margin: 12px 0; }
+blockquote { margin: 0; padding: 4px 12px; }
+.avatar { width: 32px; height: 32px; vertical-align: middle; }
+textarea { width: 100%; height: 70px; box-sizing: border-box; padding: 8px; }
+.d-editor-button-bar { padding: 6px; display: flex; gap: 12px; font-size: 18px; }
+.row { display: flex; gap: 24px; align-items: flex-start; flex-wrap: wrap; }
+.d-modal__container { padding: 16px; width: 360px; box-sizing: border-box; }
+.d-modal__title-text { font-size: 12px; margin: 0 0 8px; }
+h2.section { font-size: 10px; margin: 20px 0 10px; }
+</style>
+</head>
+<body>
+<header class="d-header"><div class="contents">
+  <a class="title" href="#">EURTH</a>
+  <ul class="d-header-icons">
+    <li class="header-dropdown-toggle gb-sound-toggle"><button type="button" aria-pressed="true"><span class="gb-sound-icon"></span></button></li>
+    <li><svg class="fa d-icon d-icon-magnifying-glass"><use href="#x"/></svg></li>
+    <li><svg class="fa d-icon d-icon-bell"><use href="#x"/></svg></li>
+    <li><svg class="fa d-icon d-icon-bars"><use href="#x"/></svg></li>
+  </ul>
+</div></header>
+<div class="wrap">
+  <aside class="sidebar-wrapper">
+    <div class="sidebar-section-header">COMMUNITY</div>
+    <a class="sidebar-section-link active" href="#">Everything</a>
+    <a class="sidebar-section-link" href="#">My posts</a>
+    <a class="sidebar-section-link" href="#">Bookmarks</a>
+    <a class="sidebar-section-link" href="#">Badges</a>
+  </aside>
+  <div id="main-outlet">
+    <ul class="nav-pills"><li><a class="active" href="#">Latest</a></li><li><a href="#">New (3)</a></li><li><a href="#">Top</a></li><li><a href="#">Categories</a></li></ul>
+    <div class="row" style="margin-bottom:16px">
+      <button class="btn btn-primary" id="create-topic"><svg class="fa d-icon d-icon-plus"><use href="#x"/></svg><span class="d-button-label">New Topic</span></button>
+      <button class="btn"><svg class="fa d-icon d-icon-pencil"><use href="#x"/></svg><span class="d-button-label">Edit</span></button>
+      <button class="btn btn-danger"><svg class="fa d-icon d-icon-trash-can"><use href="#x"/></svg><span class="d-button-label">Delete</span></button>
+      <span class="discourse-tag box">speedruns</span><span class="discourse-tag box">tetris</span>
+    </div>
+    <table class="topic-list"><thead><tr><th>Topic</th><th>Replies</th><th>Activity</th></tr></thead><tbody>
+      <tr class="topic-list-item"><td class="main-link"><a class="title" href="#">Best Tetris strategy for level 18+</a><span class="badge-category__wrapper"><a class="badge-category" style="--category-badge-color:#c0392b"><span class="badge-category__name">Gameplay</span></a></span> <span class="badge-notification new-topic">new</span></td><td>42</td><td>2m</td></tr>
+      <tr class="topic-list-item"><td class="main-link"><a class="title" href="#">Show off your cartridge collection</a><span class="badge-category__wrapper"><a class="badge-category" style="--category-badge-color:#2980b9"><span class="badge-category__name">Collecting</span></a></span> <span class="badge-notification">3</span></td><td>128</td><td>1h</td></tr>
+      <tr class="topic-list-item"><td class="main-link"><a class="title" href="#">Link cable troubleshooting thread</a><span class="badge-category__wrapper"><a class="badge-category" style="--category-badge-color:#f39c12"><span class="badge-category__name">Hardware</span></a></span></td><td>17</td><td>4h</td></tr>
+    </tbody></table>
+
+    <h2 class="section">A POST</h2>
+    <div class="topic-post"><article><div class="topic-body">
+      <div class="names"><img class="avatar" alt="" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32'%3E%3Crect width='32' height='32' fill='%23d04a8a'/%3E%3Crect x='8' y='8' width='6' height='6' fill='%23fff'/%3E%3Crect x='18' y='8' width='6' height='6' fill='%23fff'/%3E%3C/svg%3E"> <a href="#">pixelpilot</a></div>
+      <div class="cooked">
+        <h1>Boss strategy</h1>
+        <p>Read the <a href="#">full guide here</a> before you start, <a class="mention" href="#">@stijn</a> says the second phase is the hard part, and <code>START + SELECT</code> resets.</p>
+        <h2>Phase two</h2>
+        <aside class="quote"><blockquote>Wait for the blink, then jump.</blockquote></aside>
+        <h3>Frame data</h3>
+        <table><thead><tr><th>Move</th><th>Frames</th></tr></thead><tbody><tr><td>Jab</td><td>4</td></tr></tbody></table>
+        <h5>Note</h5><h6>Smallest heading</h6>
+        <hr>
+        <pre><code>while (alive) { jump(); }</code></pre>
+        <p><button class="btn"><svg class="fa d-icon d-icon-heart"><use href="#x"/></svg></button> <button class="btn"><svg class="fa d-icon d-icon-reply"><use href="#x"/></svg><span class="d-button-label">Reply</span></button> <button class="btn"><svg class="fa d-icon d-icon-bookmark"><use href="#x"/></svg></button> <button class="btn"><svg class="fa d-icon d-icon-share"><use href="#x"/></svg></button> <button class="btn"><svg class="fa d-icon d-icon-flag"><use href="#x"/></svg></button> <button class="btn"><svg class="fa d-icon d-icon-ellipsis"><use href="#x"/></svg></button></p>
+      </div>
+    </div></article></div>
+
+    <div class="row">
+      <div style="flex:1;min-width:360px"><h2 class="section">COMPOSER</h2>
+        <div class="d-editor-button-bar"><svg class="fa d-icon d-icon-check"><use href="#x"/></svg><svg class="fa d-icon d-icon-link"><use href="#x"/></svg><svg class="fa d-icon d-icon-user"><use href="#x"/></svg><svg class="fa d-icon d-icon-gear"><use href="#x"/></svg><svg class="fa d-icon d-icon-envelope"><use href="#x"/></svg></div>
+        <textarea>Typing in the composer uses the readable body font.</textarea></div>
+      <div><h2 class="section">DIALOG</h2>
+        <div class="d-modal__container"><h3 class="d-modal__title-text">Flag this post</h3><p>Tell us what is wrong.</p><button class="btn btn-primary">Send</button></div></div>
+      <div style="flex:1;min-width:300px"><h2 class="section">NOTICE</h2>
+        <div class="alert alert-info">Heads up: scheduled maintenance tonight.</div>
+        <div class="alert alert-error">Error: that title is too short.</div></div>
+    </div>
+  </div>
+</div>
+<div class="gb-toast"><strong>LEVEL UP!</strong>Regular</div>
+</body>
+</html>

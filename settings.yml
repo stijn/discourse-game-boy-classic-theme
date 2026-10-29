@@ -8,3 +8,21 @@ blinking_cursor:
   default: true
 konami_confetti:
   default: true
+readable_body_font:
+  default: true
+lcd_screen:
+  default: true
+bezel:
+  default: true
+pixel_corners:
+  default: true
+pixel_icons:
+  default: true
+menu_cursor:
+  default: true
+category_cartridges:
+  default: true
+game_ui:
+  default: true
+sound_effects:
+  default: true

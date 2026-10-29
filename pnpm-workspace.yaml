@@ -3,3 +3,5 @@ engineStrict: true
 minimumReleaseAgeExclude:
   - "@discourse/*"
 strictPeerDependencies: true
+allowBuilds:
+  "@parcel/watcher": false

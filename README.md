@@ -2,8 +2,6 @@
 
 A four-shade, 8-bit theme for [Discourse](https://www.discourse.org), inspired by the original 1989 handheld. It ships with the pixel font, square corners, chunky borders, "pressable" buttons and a Konami-code easter egg.
 
-Built for [Eurth](https://eurth.org).
-
 ## What it does
 
 - **Nine palettes.** DMG-01 (the original greens, default), DMG-01 Dark, Pocket, Backlight, Grape, Teal, Berry, Dandelion and Virtual Boy. Switch in **Admin → Appearance → Colors**. Every shade in the stylesheet reads from the active palette, so you can also make your own.

@@ -2,7 +2,8 @@
    GAME BOY CLASSIC DISCOURSE THEME
    ========================================= */
 
-/* Bundled with the theme (SIL OFL 1.1), so no request goes to Google Fonts. */
+/* Both fonts are bundled with the theme (SIL OFL 1.1), so no request goes to
+   Google Fonts. Press Start 2P is for headings and controls, VT323 for reading. */
 @font-face {
   font-family: "Press Start 2P";
   src: url($press_start_2p) format("truetype");
@@ -11,28 +12,129 @@
   font-display: swap;
 }
 
-/* The four shades follow the active colour palette (DMG-01 by default),
-   so admins can recolour the theme from Admin > Appearance > Colors. */
+@font-face {
+  font-family: "VT323";
+  src: url($vt323) format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* The shades follow the active colour palette (DMG-01 by default), so admins
+   can recolour the whole theme from Admin > Appearance > Colors.
+
+   lightest = page, light = panels, darkest = text, dark = decoration only.
+   Never put text in --gb-dark: it fails contrast. `pnpm lint:contrast` checks
+   that every bundled palette keeps text and background at 4.5:1 or better. */
 
 :root {
   --gb-lightest: var(--secondary);
   --gb-light: var(--quaternary);
-  --gb-dark: var(--tertiary);
   --gb-darkest: var(--primary);
+  --gb-dark: color-mix(in srgb, var(--primary) 70%, var(--secondary));
+  --gb-muted: color-mix(in srgb, var(--primary) 92%, var(--secondary));
+  --gb-link: var(--tertiary);
+  --gb-danger: var(--danger);
+  --gb-success: var(--success);
   --gb-font: "Press Start 2P", monospace;
+
+  @if $readable_body_font == "true" {
+    --gb-body-font: "VT323", monospace;
+  } @else {
+    --gb-body-font: "Press Start 2P", monospace;
+  }
+
+  /* Discourse derives its greys by blending text and background, which lands
+     below 4.5:1 on a four-shade screen. Pin them to the palette instead. */
+  --primary-very-high: var(--primary);
+  --primary-high: var(--primary);
+  --primary-medium: var(--gb-muted);
+  --primary-low-mid: var(--gb-muted);
+  --primary-low: var(--gb-dark);
+  --primary-very-low: var(--quaternary);
+}
+
+/* Stair-stepped corners without clip-path, so box-shadows still work.
+   The element loses its border; the shadows draw four 1-step-inset edges and
+   leave the corner pixels empty. $base thickens the bottom edge like a key. */
+@mixin gb-notched($w: 2px, $base: 0px, $color: var(--gb-darkest)) {
+  border: 0 !important;
+  margin: $w;
+  box-shadow:
+    0 (-$w) 0 0 $color,
+    0 ($w + $base) 0 0 $color,
+    (-$w) 0 0 0 $color,
+    $w 0 0 0 $color !important;
 }
 
 /* 1. TYPOGRAPHY & GLOBAL STYLES */
+
+/* Reading text uses the body font; controls and headings use the pixel font. */
 body,
 input,
-button,
 select,
-textarea,
-.btn,
-.nav-pills > li > a {
-  font-family: var(--gb-font) !important;
-  font-size: 11px; /* Pixel fonts are large; keep this small */
+textarea {
+  font-family: var(--gb-body-font) !important;
+  font-size: 11px;
   line-height: 1.8;
+
+  @if $readable_body_font == "true" {
+    font-size: 20px;
+    line-height: 1.3;
+  }
+}
+
+button,
+.btn,
+.nav-pills > li > a,
+.d-header .title,
+.topic-list th,
+.badge-notification,
+.discourse-tag,
+.sidebar-section-header,
+.sidebar-section-link,
+.menu-panel .category-link,
+.d-modal__title-text,
+.user-card .names,
+.fancy-title {
+  font-family: var(--gb-font) !important;
+}
+
+@if $readable_body_font == "true" {
+  button,
+  .btn,
+  .nav-pills > li > a,
+  .topic-list th,
+  .sidebar-section-link,
+  .badge-notification,
+  .discourse-tag {
+    font-size: 10px;
+    line-height: 1.8;
+  }
+
+  .cooked,
+  .cooked p,
+  .cooked li {
+    font-size: 22px;
+    line-height: 1.3;
+  }
+
+  p > code,
+  li > code,
+  pre code {
+    font-family: var(--gb-body-font);
+    font-size: 20px;
+  }
+}
+
+::selection {
+  background: var(--gb-darkest);
+  color: var(--gb-lightest);
+}
+
+::placeholder {
+  color: var(--gb-muted);
+  opacity: 1;
 }
 
 /* Force headings, buttons and tags to uppercase for that retro OS feel */
@@ -57,10 +159,47 @@ textarea,
   border-radius: 0 !important;
 }
 
-/* 3. LAYOUT & BORDERS */
+/* 3. LINKS & FOCUS */
+
+/* Links are the darkest ink, told apart from text by a thick underline. */
+.cooked a:not(.mention, .mention-group, .lightbox, .anchor),
+.topic-body .names a,
+.user-card a,
+.footer-links a {
+  color: var(--gb-link);
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+
+.cooked a:not(.mention, .mention-group, .lightbox, .anchor):hover,
+.topic-body .names a:hover {
+  background: var(--gb-darkest);
+  color: var(--gb-lightest);
+}
+
+a:focus-visible,
+button:focus-visible,
+.btn:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+summary:focus-visible,
+[tabindex]:focus-visible {
+  outline: 4px solid var(--gb-darkest);
+  outline-offset: 2px;
+}
+
+/* 4. LAYOUT & BORDERS */
 .d-header {
-  border-bottom: 4px solid var(--gb-darkest);
+  border-bottom: 4px solid var(--gb-dark);
   box-shadow: none !important;
+}
+
+.d-header,
+.d-header a,
+.d-header .icon,
+.d-header .d-icon {
+  color: var(--header_primary);
 }
 
 #main-outlet {
@@ -75,31 +214,143 @@ textarea,
   padding: 10px;
 }
 
-.topic-post {
-  border: 4px solid var(--gb-darkest);
-  margin-bottom: 15px;
-  background-color: var(--gb-light);
+.topic-list .main-link a.title,
+.topic-list .main-link a.title:visited {
+  color: var(--gb-darkest);
+  font-size: 12px;
+  line-height: 1.7;
 }
 
-/* 4. RETRO BUTTON PHYSICS */
+.topic-post {
+  margin-bottom: 15px;
+  background-color: var(--gb-light);
+
+  @if $pixel_corners == "true" {
+    @include gb-notched(4px, 4px);
+  } @else {
+    border: 4px solid var(--gb-darkest);
+  }
+}
+
+/* Quotes, onebox cards and tables */
+aside.quote,
+aside.onebox,
+.cooked table th,
+.cooked table td {
+  background: var(--gb-lightest);
+  border: 2px solid var(--gb-darkest);
+}
+
+blockquote {
+  border-left: 4px solid var(--gb-darkest);
+  background: var(--gb-light);
+}
+
+/* 5. RETRO BUTTON PHYSICS */
 .btn {
   background-color: var(--gb-lightest) !important;
   color: var(--gb-darkest) !important;
-  border: 2px solid var(--gb-darkest) !important;
-  box-shadow: 4px 4px 0 var(--gb-darkest) !important;
   transition: none !important;
+
+  @if $pixel_corners == "true" {
+    @include gb-notched(2px, 4px);
+  } @else {
+    border: 2px solid var(--gb-darkest) !important;
+    box-shadow: 4px 4px 0 var(--gb-darkest) !important;
+  }
+
+  .d-icon {
+    color: inherit !important;
+  }
 }
 
-/* When clicking/hovering, press the button down */
-.btn:hover,
-.btn:active {
-  transform: translate(4px, 4px) !important;
-  box-shadow: 0 0 0 var(--gb-darkest) !important;
-  background-color: var(--gb-dark) !important;
+.btn-primary {
+  background-color: var(--gb-darkest) !important;
   color: var(--gb-lightest) !important;
 }
 
-/* 5. GAME BOY CAMERA EFFECT (Images & Avatars) */
+.btn-danger {
+  background-color: var(--gb-danger) !important;
+  color: var(--gb-lightest) !important;
+}
+
+/* When clicking/hovering, press the button down: the colours invert, which
+   keeps the 6:1 contrast of the palette. */
+
+.btn:hover,
+.btn:active,
+.btn:focus-visible {
+  transform: translate(2px, 4px) !important;
+  background-color: var(--gb-darkest) !important;
+  color: var(--gb-lightest) !important;
+
+  @if $pixel_corners == "true" {
+    box-shadow:
+      0 -2px 0 0 var(--gb-darkest),
+      0 2px 0 0 var(--gb-darkest),
+      -2px 0 0 0 var(--gb-darkest),
+      2px 0 0 0 var(--gb-darkest) !important;
+  } @else {
+    box-shadow: 0 0 0 var(--gb-darkest) !important;
+  }
+}
+
+.btn-primary:hover,
+.btn-primary:active,
+.btn-danger:hover,
+.btn-danger:active {
+  background-color: var(--gb-lightest) !important;
+  color: var(--gb-darkest) !important;
+}
+
+.btn[disabled],
+.btn.disabled {
+  opacity: 0.6;
+}
+
+/* 6. UNREAD, NEW AND ERROR ACCENTS
+   The body-plastic colours of the real console, kept for things that matter. */
+
+.badge-notification {
+  background-color: var(--gb-danger) !important;
+  color: var(--gb-lightest) !important;
+  border: 0 !important;
+}
+
+.badge-notification.new-topic,
+.badge-notification.new-posts,
+.badge-notification.new-topic-count {
+  background-color: var(--gb-success) !important;
+}
+
+.has-like .d-icon-heart,
+.has-like .d-icon-d-liked {
+  color: var(--love) !important;
+}
+
+input.invalid,
+.input-invalid {
+  border-color: var(--gb-danger) !important;
+}
+
+/* Notices carry their meaning in the frame colour. */
+.alert-error {
+  border-color: var(--gb-danger) !important;
+
+  @if $pixel_corners == "true" {
+    @include gb-notched(4px, 4px, var(--gb-danger));
+  }
+}
+
+.alert-success {
+  border-color: var(--gb-success) !important;
+
+  @if $pixel_corners == "true" {
+    @include gb-notched(4px, 4px, var(--gb-success));
+  }
+}
+
+/* 7. GAME BOY CAMERA EFFECT (Images & Avatars) */
 
 /* Forces all colorful avatars and uploaded images into a green, high-contrast monochrome */
 @if $camera_filter == "true" {
@@ -118,13 +369,17 @@ textarea,
   }
 }
 
-/* 6. INPUT FIELDS & COMPOSER */
+/* 8. INPUT FIELDS, COMPOSER & MENUS */
 input[type="text"],
 input[type="password"],
 input[type="email"],
+input[type="search"],
+input[type="number"],
 textarea,
-.d-editor-textarea-wrapper {
-  background-color: var(--gb-light) !important;
+.d-editor-textarea-wrapper,
+.select-kit .select-kit-header,
+.select-kit .select-kit-filter {
+  background-color: var(--gb-lightest) !important;
   border: 4px solid var(--gb-darkest) !important;
   color: var(--gb-darkest) !important;
 }
@@ -132,10 +387,49 @@ textarea,
 input:focus,
 textarea:focus {
   outline: none;
-  background-color: var(--gb-lightest) !important;
+  background-color: var(--gb-light) !important;
 }
 
-/* 7. BLOCKY SCROLLBARS (Webkit Browsers) */
+.d-editor-button-bar,
+.d-editor-preview-wrapper {
+  background: var(--gb-light);
+  border: 2px solid var(--gb-darkest);
+}
+
+.select-kit .select-kit-body,
+.d-modal__container,
+.menu-panel,
+.user-menu,
+.fk-d-menu,
+.fk-d-tooltip {
+  background: var(--gb-lightest);
+  color: var(--gb-darkest);
+  border: 4px solid var(--gb-darkest) !important;
+  box-shadow: 6px 6px 0 var(--gb-darkest) !important;
+}
+
+.select-kit .select-kit-row.is-highlighted,
+.select-kit .select-kit-row:hover,
+.sidebar-section-link:hover,
+.sidebar-section-link.active,
+.menu-panel li:hover,
+.user-menu .quick-access-panel li:hover {
+  background: var(--gb-darkest);
+  color: var(--gb-lightest);
+}
+
+.sidebar-wrapper,
+.sidebar-section-link,
+.sidebar-section-header {
+  color: var(--gb-darkest);
+}
+
+.sidebar-section-link:hover .d-icon,
+.sidebar-section-link.active .d-icon {
+  color: var(--gb-lightest);
+}
+
+/* 9. BLOCKY SCROLLBARS (Webkit Browsers) */
 ::-webkit-scrollbar {
   width: 14px;
   background: var(--gb-lightest);
@@ -147,7 +441,7 @@ textarea:focus {
   border: 2px solid var(--gb-darkest);
 }
 
-/* 8. CODE & PREFORMATTED TEXT */
+/* 10. CODE & PREFORMATTED TEXT */
 
 /* Inline code snippets */
 p > code,
@@ -181,7 +475,7 @@ pre code {
   color: var(--gb-lightest) !important;
 }
 
-/* 9. @MENTIONS */
+/* 11. @MENTIONS */
 a.mention,
 a.mention-group {
   background-color: var(--gb-darkest) !important;
@@ -203,7 +497,7 @@ a.mention-group:hover {
   transform: translate(-2px, -2px);
 }
 
-/* 10. GLOBAL NOTICES & ALERTS */
+/* 12. GLOBAL NOTICES & ALERTS */
 
 /* Gives the admin/system banners a chunky, dialogue-box look */
 .global-notice,
@@ -213,13 +507,18 @@ a.mention-group:hover {
 .fps-notice {
   background-color: var(--gb-light) !important;
   color: var(--gb-darkest) !important;
-  border: 4px solid var(--gb-darkest) !important;
-  box-shadow: 4px 4px 0 var(--gb-darkest);
   margin-bottom: 20px;
   padding: 15px;
+
+  @if $pixel_corners == "true" {
+    @include gb-notched(4px, 4px);
+  } @else {
+    border: 4px solid var(--gb-darkest) !important;
+    box-shadow: 4px 4px 0 var(--gb-darkest);
+  }
 }
 
-/* 11. TOPIC TAGS (Box Style) */
+/* 13. TOPIC TAGS (Box Style) */
 
 /* Forces tags into hard squares with retro drop-shadows */
 .discourse-tag.box {
@@ -242,7 +541,7 @@ a.mention-group:hover {
   text-decoration: none !important;
 }
 
-/* 12. HORIZONTAL RULE (HR) WITHIN POSTS */
+/* 14. HORIZONTAL RULE (HR) WITHIN POSTS */
 
 /* Replaces the standard thin line with a chunky, 8-bit dashed divider */
 .cooked hr {
@@ -252,7 +551,7 @@ a.mention-group:hover {
   margin: 25px 0;
 }
 
-/* 13. H1 - H6 HEADERS (In-Post Content) */
+/* 15. H1 - H6 HEADERS (In-Post Content) */
 
 /* Scoped to ".cooked" so it only applies to user-generated markdown posts */
 .cooked h1,
@@ -278,7 +577,7 @@ a.mention-group:hover {
 /* H2: Subtitle - gets a dashed underline */
 .cooked h2 {
   font-size: 16px;
-  border-bottom: 2px dashed var(--gb-dark);
+  border-bottom: 2px dashed var(--gb-darkest);
   padding-bottom: 6px;
 }
 
@@ -300,13 +599,14 @@ a.mention-group:hover {
   padding: 4px 8px;
 }
 
-/* H6 gets a lighter shade */
+/* H6 is the smallest, underlined so it stays distinct at full contrast */
 .cooked h6 {
   font-size: 10px;
-  color: var(--gb-dark);
+  text-decoration: underline dotted;
+  text-underline-offset: 4px;
 }
 
-/* 14. FORCE 8-BIT FONT ON ALL HEADERS */
+/* 16. FORCE 8-BIT FONT ON ALL HEADERS */
 h1,
 h2,
 h3,
@@ -325,13 +625,429 @@ h6,
   font-family: var(--gb-font) !important;
 }
 
+/* 17. CATEGORY CARTRIDGES */
+
+/* Each category's colour marker becomes a little cartridge with a cut corner. */
+@if $category_cartridges == "true" {
+  .badge-category__wrapper {
+    --category-badge-size: 12px;
+
+    .badge-category {
+      color: var(--gb-darkest);
+
+      &::before {
+        width: 12px;
+        height: 16px;
+        border: 0;
+        box-shadow: inset 0 -4px 0 0 rgb(0 0 0 / 35%);
+        clip-path: polygon(0 0, 65% 0, 100% 25%, 100% 100%, 0 100%);
+      }
+    }
+
+    .badge-category__name {
+      color: var(--gb-darkest);
+    }
+  }
+}
+
+/* 18. MENU CURSOR */
+
+/* A stair-stepped ▶ marks the topic row under the mouse or keyboard focus. */
+@if $menu_cursor == "true" {
+  .topic-list-item td.main-link {
+    position: relative;
+    padding-left: 22px;
+  }
+
+  .topic-list-item:hover td.main-link::before,
+  .topic-list-item:focus-within td.main-link::before {
+    content: "";
+    position: absolute;
+    left: 6px;
+    top: 50%;
+    width: 8px;
+    height: 14px;
+    margin-top: -7px;
+    background: var(--gb-darkest);
+    clip-path: polygon(
+      0 0,
+      2px 0,
+      2px 2px,
+      4px 2px,
+      4px 4px,
+      6px 4px,
+      6px 6px,
+      8px 6px,
+      8px 8px,
+      6px 8px,
+      6px 10px,
+      4px 10px,
+      4px 12px,
+      2px 12px,
+      2px 14px,
+      0 14px
+    );
+  }
+}
+
+/* 19. LCD SCREEN, VIGNETTE & BEZEL */
+
+/* A faint 3px pixel grid and a darkened edge sit over the page. They catch no
+   clicks, and switch off for visitors who ask for more contrast. */
+@if $lcd_screen == "true" {
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 9000;
+    pointer-events: none;
+    background:
+      linear-gradient(to right, rgb(0 0 0 / 7%) 1px, transparent 1px)
+        0
+        0 /
+        3px
+        3px,
+      linear-gradient(to bottom, rgb(0 0 0 / 7%) 1px, transparent 1px)
+        0
+        0 /
+        3px
+        3px,
+      radial-gradient(
+        ellipse at center,
+        transparent 55%,
+        rgb(0 0 0 / 16%) 100%
+      );
+  }
+
+  @media (prefers-contrast: more) {
+    body::after {
+      display: none;
+    }
+  }
+}
+
+/* The bezel is a fixed frame around the viewport, with a power light cut into
+   the top edge and the console's printed tagline along the bottom. */
+@if $bezel == "true" {
+  html::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 999;
+    pointer-events: none;
+    border: 6px solid var(--gb-darkest);
+    background: linear-gradient(var(--gb-danger), var(--gb-danger))
+      24px
+      0 /
+      10px
+      6px
+      no-repeat
+      border-box;
+    background-origin: border-box;
+  }
+
+  body::before {
+    content: "DOT MATRIX WITH STEREO SOUND";
+    content: "DOT MATRIX WITH STEREO SOUND" / "";
+    position: fixed;
+    left: 50%;
+    bottom: 0;
+    z-index: 999;
+    transform: translateX(-50%);
+    padding: 2px 10px;
+    background: var(--gb-darkest);
+    color: var(--gb-lightest);
+    font-family: var(--gb-font);
+    font-size: 6px;
+    line-height: 1.6;
+    pointer-events: none;
+    white-space: nowrap;
+  }
+
+  @media (width <= 700px) {
+    body::before {
+      display: none;
+    }
+  }
+}
+
+/* 20. GAME UI: TYPEWRITER TITLES, HP BAR, GAME OVER, LEVEL UP */
+@if $game_ui == "true" {
+  /* The reading-progress track is cut into HP-bar segments. */
+  .topic-timeline .timeline-scrollarea {
+    background: repeating-linear-gradient(
+        to bottom,
+        var(--gb-darkest) 0 6px,
+        transparent 6px 8px
+      )
+      left /
+      4px
+      100%
+      no-repeat;
+  }
+
+  .topic-timeline .timeline-handle {
+    background: var(--gb-darkest);
+    width: 8px;
+  }
+
+  /* A missing page ends the run. */
+  .page-not-found .title_wrapper::before {
+    content: "GAME OVER";
+    display: block;
+    margin-bottom: 16px;
+    font-family: var(--gb-font);
+    font-size: 28px;
+    color: var(--gb-darkest);
+  }
+
+  /* The toast the level-up script builds. */
+  .gb-toast {
+    position: fixed;
+    left: 50%;
+    bottom: 40px;
+    z-index: 10000;
+    transform: translateX(-50%);
+    padding: 14px 18px;
+    background: var(--gb-lightest);
+    color: var(--gb-darkest);
+    border: 4px solid var(--gb-darkest);
+    box-shadow: 6px 6px 0 var(--gb-darkest);
+    font-family: var(--gb-font);
+    font-size: 10px;
+    line-height: 1.8;
+    text-align: center;
+  }
+
+  .gb-toast strong {
+    display: block;
+    font-weight: normal;
+    font-size: 14px;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .d-modal__title-text {
+      animation: gb-type 0.8s steps(20) both;
+    }
+
+    .gb-toast {
+      animation: gb-toast-in 0.4s steps(5) both;
+    }
+  }
+}
+
+/* 21. SOUND TOGGLE (header speaker button, built by the sound script) */
+.gb-sound-toggle button {
+  background: transparent !important;
+  box-shadow: none !important;
+  border: 0 !important;
+  padding: 8px;
+  color: var(--header_primary) !important;
+}
+
+.gb-sound-toggle .gb-sound-icon {
+  display: block;
+  width: 20px;
+  height: 20px;
+  background: currentcolor;
+  mask: var(--gb-speaker-off) center / contain no-repeat;
+}
+
+.gb-sound-toggle button[aria-pressed="true"] .gb-sound-icon {
+  mask-image: var(--gb-speaker-on);
+}
+
+:root {
+  --gb-speaker-on: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8' shape-rendering='crispEdges'%3E%3Cpath d='M3 0h1v1h-1zM2 1h2v1h-2zM6 1h1v1h-1zM0 2h4v1h-4zM7 2h1v1h-1zM0 3h4v1h-4zM5 3h1v1h-1zM7 3h1v1h-1zM0 4h4v1h-4zM5 4h1v1h-1zM7 4h1v1h-1zM0 5h4v1h-4zM7 5h1v1h-1zM2 6h2v1h-2zM6 6h1v1h-1zM3 7h1v1h-1z'/%3E%3C/svg%3E");
+  --gb-speaker-off: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8' shape-rendering='crispEdges'%3E%3Cpath d='M3 0h1v1h-1zM2 1h2v1h-2zM5 1h1v1h-1zM7 1h1v1h-1zM0 2h4v1h-4zM6 2h1v1h-1zM0 3h4v1h-4zM5 3h1v1h-1zM7 3h1v1h-1zM0 4h4v1h-4zM6 4h1v1h-1zM0 5h4v1h-4zM5 5h1v1h-1zM7 5h1v1h-1zM2 6h2v1h-2zM3 7h1v1h-1z'/%3E%3C/svg%3E");
+}
+
+/* 22. PIXEL ICONS */
+@mixin gb-pixel-icon($url) {
+  use {
+    display: none;
+  }
+  background-color: currentcolor;
+  mask: $url center / contain no-repeat;
+}
+
+@if $pixel_icons == "true" {
+  svg.d-icon {
+    image-rendering: pixelated;
+  }
+
+  /* BEGIN pixel-icons (generated by scripts/gen-pixel-icons.mjs, do not edit) */
+  svg.d-icon-heart,
+  svg.d-icon-d-liked {
+    @include gb-pixel-icon(
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8' shape-rendering='crispEdges'%3E%3Cpath d='M1 0h2v1h-2zM5 0h2v1h-2zM0 1h8v1h-8zM0 2h8v1h-8zM0 3h8v1h-8zM1 4h6v1h-6zM2 5h4v1h-4zM3 6h2v1h-2z'/%3E%3C/svg%3E")
+    );
+  }
+
+  svg.d-icon-far-heart,
+  svg.d-icon-d-unliked {
+    @include gb-pixel-icon(
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8' shape-rendering='crispEdges'%3E%3Cpath d='M1 0h2v1h-2zM5 0h2v1h-2zM0 1h1v1h-1zM3 1h2v1h-2zM7 1h1v1h-1zM0 2h1v1h-1zM7 2h1v1h-1zM0 3h1v1h-1zM7 3h1v1h-1zM1 4h1v1h-1zM6 4h1v1h-1zM2 5h1v1h-1zM5 5h1v1h-1zM3 6h2v1h-2z'/%3E%3C/svg%3E")
+    );
+  }
+
+  svg.d-icon-reply {
+    @include gb-pixel-icon(
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8' shape-rendering='crispEdges'%3E%3Cpath d='M2 0h1v1h-1zM1 1h2v1h-2zM0 2h7v1h-7zM1 3h2v1h-2zM6 3h2v1h-2zM2 4h1v1h-1zM7 4h1v1h-1zM7 5h1v1h-1zM6 6h2v1h-2zM1 7h6v1h-6z'/%3E%3C/svg%3E")
+    );
+  }
+
+  svg.d-icon-bookmark,
+  svg.d-icon-discourse-bookmark-clock,
+  svg.d-icon-far-bookmark {
+    @include gb-pixel-icon(
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8' shape-rendering='crispEdges'%3E%3Cpath d='M1 0h6v1h-6zM1 1h6v1h-6zM1 2h6v1h-6zM1 3h6v1h-6zM1 4h6v1h-6zM1 5h2v1h-2zM5 5h2v1h-2zM1 6h1v1h-1zM6 6h1v1h-1z'/%3E%3C/svg%3E")
+    );
+  }
+
+  svg.d-icon-bell,
+  svg.d-icon-far-bell,
+  svg.d-icon-d-regular,
+  svg.d-icon-d-watching,
+  svg.d-icon-d-tracking {
+    @include gb-pixel-icon(
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8' shape-rendering='crispEdges'%3E%3Cpath d='M3 0h2v1h-2zM2 1h4v1h-4zM1 2h6v1h-6zM1 3h6v1h-6zM1 4h6v1h-6zM0 5h8v1h-8zM3 7h2v1h-2z'/%3E%3C/svg%3E")
+    );
+  }
+
+  svg.d-icon-magnifying-glass,
+  svg.d-icon-search {
+    @include gb-pixel-icon(
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8' shape-rendering='crispEdges'%3E%3Cpath d='M1 0h4v1h-4zM0 1h1v1h-1zM5 1h1v1h-1zM0 2h1v1h-1zM5 2h1v1h-1zM0 3h1v1h-1zM5 3h1v1h-1zM1 4h5v1h-5zM5 5h2v1h-2zM6 6h2v1h-2zM7 7h1v1h-1z'/%3E%3C/svg%3E")
+    );
+  }
+
+  svg.d-icon-bars {
+    @include gb-pixel-icon(
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8' shape-rendering='crispEdges'%3E%3Cpath d='M0 1h8v1h-8zM0 3h8v1h-8zM0 5h8v1h-8z'/%3E%3C/svg%3E")
+    );
+  }
+
+  svg.d-icon-plus {
+    @include gb-pixel-icon(
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8' shape-rendering='crispEdges'%3E%3Cpath d='M3 0h2v1h-2zM3 1h2v1h-2zM3 2h2v1h-2zM0 3h8v1h-8zM0 4h8v1h-8zM3 5h2v1h-2zM3 6h2v1h-2zM3 7h2v1h-2z'/%3E%3C/svg%3E")
+    );
+  }
+
+  svg.d-icon-xmark,
+  svg.d-icon-times {
+    @include gb-pixel-icon(
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8' shape-rendering='crispEdges'%3E%3Cpath d='M0 0h2v1h-2zM6 0h2v1h-2zM0 1h3v1h-3zM5 1h3v1h-3zM1 2h6v1h-6zM2 3h4v1h-4zM2 4h4v1h-4zM1 5h6v1h-6zM0 6h3v1h-3zM5 6h3v1h-3zM0 7h2v1h-2zM6 7h2v1h-2z'/%3E%3C/svg%3E")
+    );
+  }
+
+  svg.d-icon-check {
+    @include gb-pixel-icon(
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8' shape-rendering='crispEdges'%3E%3Cpath d='M7 1h1v1h-1zM6 2h2v1h-2zM0 3h1v1h-1zM5 3h2v1h-2zM0 4h2v1h-2zM4 4h2v1h-2zM1 5h4v1h-4zM2 6h2v1h-2z'/%3E%3C/svg%3E")
+    );
+  }
+
+  svg.d-icon-pencil,
+  svg.d-icon-pen {
+    @include gb-pixel-icon(
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8' shape-rendering='crispEdges'%3E%3Cpath d='M5 0h2v1h-2zM4 1h4v1h-4zM3 2h4v1h-4zM2 3h4v1h-4zM1 4h4v1h-4zM0 5h4v1h-4zM0 6h3v1h-3zM0 7h2v1h-2z'/%3E%3C/svg%3E")
+    );
+  }
+
+  svg.d-icon-trash-can,
+  svg.d-icon-far-trash-can,
+  svg.d-icon-trash {
+    @include gb-pixel-icon(
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8' shape-rendering='crispEdges'%3E%3Cpath d='M2 0h4v1h-4zM0 1h8v1h-8zM1 2h6v1h-6zM1 3h1v1h-1zM3 3h2v1h-2zM6 3h1v1h-1zM1 4h1v1h-1zM3 4h2v1h-2zM6 4h1v1h-1zM1 5h1v1h-1zM3 5h2v1h-2zM6 5h1v1h-1zM1 6h6v1h-6z'/%3E%3C/svg%3E")
+    );
+  }
+
+  svg.d-icon-share,
+  svg.d-icon-link {
+    @include gb-pixel-icon(
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8' shape-rendering='crispEdges'%3E%3Cpath d='M4 0h1v1h-1zM4 1h2v1h-2zM0 2h7v1h-7zM0 3h8v1h-8zM0 4h7v1h-7zM4 5h2v1h-2zM4 6h1v1h-1z'/%3E%3C/svg%3E")
+    );
+  }
+
+  svg.d-icon-flag,
+  svg.d-icon-far-flag {
+    @include gb-pixel-icon(
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8' shape-rendering='crispEdges'%3E%3Cpath d='M0 0h6v1h-6zM0 1h7v1h-7zM0 2h6v1h-6zM0 3h7v1h-7zM0 4h2v1h-2zM0 5h2v1h-2zM0 6h2v1h-2zM0 7h2v1h-2z'/%3E%3C/svg%3E")
+    );
+  }
+
+  svg.d-icon-ellipsis,
+  svg.d-icon-ellipsis-vertical-h {
+    @include gb-pixel-icon(
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8' shape-rendering='crispEdges'%3E%3Cpath d='M0 3h2v1h-2zM3 3h2v1h-2zM6 3h2v1h-2zM0 4h2v1h-2zM3 4h2v1h-2zM6 4h2v1h-2z'/%3E%3C/svg%3E")
+    );
+  }
+
+  svg.d-icon-chevron-down,
+  svg.d-icon-angle-down,
+  svg.d-icon-caret-down {
+    @include gb-pixel-icon(
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8' shape-rendering='crispEdges'%3E%3Cpath d='M0 1h2v1h-2zM6 1h2v1h-2zM0 2h3v1h-3zM5 2h3v1h-3zM1 3h6v1h-6zM2 4h4v1h-4zM3 5h2v1h-2z'/%3E%3C/svg%3E")
+    );
+  }
+
+  svg.d-icon-chevron-up,
+  svg.d-icon-angle-up,
+  svg.d-icon-caret-up {
+    @include gb-pixel-icon(
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8' shape-rendering='crispEdges'%3E%3Cpath d='M3 2h2v1h-2zM2 3h4v1h-4zM1 4h6v1h-6zM0 5h3v1h-3zM5 5h3v1h-3zM0 6h2v1h-2zM6 6h2v1h-2z'/%3E%3C/svg%3E")
+    );
+  }
+
+  svg.d-icon-chevron-left,
+  svg.d-icon-angle-left,
+  svg.d-icon-caret-left {
+    @include gb-pixel-icon(
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8' shape-rendering='crispEdges'%3E%3Cpath d='M4 1h2v1h-2zM3 2h3v1h-3zM2 3h3v1h-3zM1 4h3v1h-3zM2 5h3v1h-3zM3 6h3v1h-3zM4 7h2v1h-2z'/%3E%3C/svg%3E")
+    );
+  }
+
+  svg.d-icon-chevron-right,
+  svg.d-icon-angle-right,
+  svg.d-icon-caret-right {
+    @include gb-pixel-icon(
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8' shape-rendering='crispEdges'%3E%3Cpath d='M2 1h2v1h-2zM2 2h3v1h-3zM3 3h3v1h-3zM4 4h3v1h-3zM3 5h3v1h-3zM2 6h3v1h-3zM2 7h2v1h-2z'/%3E%3C/svg%3E")
+    );
+  }
+
+  svg.d-icon-user,
+  svg.d-icon-far-user,
+  svg.d-icon-circle-user {
+    @include gb-pixel-icon(
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8' shape-rendering='crispEdges'%3E%3Cpath d='M2 0h4v1h-4zM1 1h6v1h-6zM1 2h6v1h-6zM2 3h4v1h-4zM3 4h2v1h-2zM1 5h6v1h-6zM0 6h8v1h-8zM0 7h8v1h-8z'/%3E%3C/svg%3E")
+    );
+  }
+
+  svg.d-icon-gear,
+  svg.d-icon-cog,
+  svg.d-icon-wrench {
+    @include gb-pixel-icon(
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8' shape-rendering='crispEdges'%3E%3Cpath d='M3 0h2v1h-2zM1 1h1v1h-1zM3 1h2v1h-2zM6 1h1v1h-1zM2 2h4v1h-4zM0 3h3v1h-3zM5 3h3v1h-3zM0 4h3v1h-3zM5 4h3v1h-3zM2 5h4v1h-4zM1 6h1v1h-1zM3 6h2v1h-2zM6 6h1v1h-1zM3 7h2v1h-2z'/%3E%3C/svg%3E")
+    );
+  }
+
+  svg.d-icon-envelope,
+  svg.d-icon-far-envelope {
+    @include gb-pixel-icon(
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8' shape-rendering='crispEdges'%3E%3Cpath d='M0 0h8v1h-8zM0 1h2v1h-2zM6 1h2v1h-2zM0 2h1v1h-1zM2 2h1v1h-1zM5 2h1v1h-1zM7 2h1v1h-1zM0 3h1v1h-1zM3 3h2v1h-2zM7 3h1v1h-1zM0 4h1v1h-1zM7 4h1v1h-1zM0 5h1v1h-1zM7 5h1v1h-1zM0 6h8v1h-8z'/%3E%3C/svg%3E")
+    );
+  }
+
+  /* END pixel-icons */
+}
+
 /* =========================================
    DELIGHTFUL 8-BIT ANIMATIONS
    Only for visitors who haven't asked their OS for reduced motion.
    ========================================= */
 
 @media (prefers-reduced-motion: no-preference) {
-  /* 15. GAME BOY BOOT-UP LOGO */
+  /* GAME BOY BOOT-UP LOGO */
 
   /* Drops the logo down on page load and flashes (mimicking the classic boot screen) */
   @if $boot_animation == "true" {
@@ -342,7 +1058,7 @@ h6,
     }
   }
 
-  /* 16. THE "1UP" LIKE BUTTON JUMP */
+  /* THE "1UP" LIKE BUTTON JUMP */
 
   /* When a user likes a post, the heart does a low-framerate 8-bit bounce.
      steps() simulates a chunky, low frame rate. */
@@ -351,7 +1067,7 @@ h6,
     animation: gb-pixel-jump 0.4s steps(4) forwards;
   }
 
-  /* 17. BLINKING TERMINAL CURSOR */
+  /* BLINKING TERMINAL CURSOR */
 
   /* Adds a flashing square cursor to the "Reply" and "New Topic" buttons */
   @if $blinking_cursor == "true" {
@@ -363,10 +1079,6 @@ h6,
       animation: gb-retro-blink 1s infinite;
     }
   }
-}
-
-.has-like .d-icon-heart {
-  color: var(--gb-darkest) !important;
 }
 
 @keyframes gb-boot-drop {
@@ -421,5 +1133,27 @@ h6,
   50%,
   100% {
     opacity: 0;
+  }
+}
+
+@keyframes gb-type {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes gb-toast-in {
+  from {
+    transform: translate(-50%, 40px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translate(-50%, 0);
+    opacity: 1;
   }
 }

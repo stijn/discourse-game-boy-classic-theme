@@ -1,9 +1,23 @@
 en:
   theme_metadata:
-    description: "A four-shade, 8-bit theme inspired by the original 1989 handheld: pixel font, square corners, chunky borders and a Konami-code easter egg."
+    description: "A four-shade, 8-bit theme inspired by the original 1989 handheld: pixel font, square corners, chunky borders and a Konami-code easter egg. Includes nine palettes, an LCD screen effect, pixel icons and optional sound."
     settings:
       uppercase_text: "Show headings, topic titles, buttons and tags in capitals, like a handheld menu screen."
       camera_filter: "Tint avatars, logos and post images green, like a 1998 pocket camera print."
       boot_animation: "Drop the site logo in on page load, with a short flash, like a cartridge boot screen."
       blinking_cursor: "Show a blinking block cursor on the New Topic and Reply buttons."
       konami_confetti: "Fire square confetti in the four palette shades when someone types ↑ ↑ ↓ ↓ ← → ← → B A. The confetti script loads only when the code is entered."
+      readable_body_font: "Set post and form text in VT323, a pixel-style font that is easier to read at length. Headings, buttons and menus stay in Press Start 2P."
+      lcd_screen: "Overlay a faint LCD pixel grid and screen vignette. Switches itself off for visitors who ask their device for more contrast."
+      bezel: "Frame the page with a handheld-style bezel and a power light."
+      pixel_corners: "Draw buttons, posts, notices and dialogs with stair-stepped pixel corners instead of plain square ones."
+      pixel_icons: "Replace common icons (heart, reply, bell, search and so on) with 8×8 pixel versions."
+      menu_cursor: "Show a pixel ▶ cursor beside the topic row under the mouse or keyboard focus."
+      category_cartridges: "Draw each category's colour marker as a little game cartridge."
+      game_ui: "Type out dialog titles, segment the reading-progress bar like an HP bar, show GAME OVER on missing pages, and pop a LEVEL UP toast when someone earns a badge."
+      sound_effects: "Let members turn on chiptune beeps for buttons, likes, posts, notifications and badges, using the speaker button in the header. Sound is off until a member turns it on."
+  sound:
+    turn_on: "Turn Game Boy sound effects on"
+    turn_off: "Turn Game Boy sound effects off"
+  level_up:
+    title: "LEVEL UP!"
